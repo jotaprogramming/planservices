@@ -1,0 +1,56 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+
+<div class="row">
+    <div class="index-form" style="padding-top: 5px;">
+        <div class="card border-primary mb-3" style="padding: 40px;">
+            <div class="btn-menu">
+                <label for="btn-menu" class="fas fa-bars"></label>
+            </div>
+            <input type="checkbox" id="btn-menu">
+            <div class="container-menu">
+                <div class="cont-menu">
+                    <nav>
+                        <a href="/company/add">Empresa</a>
+                        <a href="/city/add">Municipio</a>
+                    </nav>
+                    <label for="btn-menu" class="icon-equis">x</label>
+                </div>
+            </div>
+            <div class="card-header"><i class="far fa-address-card"></i> CLIENTES</div>
+            <form action="/client/consult" method="POST">
+                <div class="form-group">
+                    <input type="text" name="tel" placeholder="Teléfono fijo del cliente a consultar" class="form-control" onkeypress="return SoloNumeros(event);" maxlength="7">
+                </div>
+                {% with messages = get_flashed_messages() %}
+
+                {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-dismissible alert-primary">
+                        {{message}}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+                {% endif %}
+                {% endwith %}
+                <div class="d-grid gap-2">
+                    <button type="submit" class="btn btn-outline-primary btn-lg bt"><i class="far fa-eye"></i> Consultar</button>
+                </div>
+            </form>
+            <div class="d-grid gap-2">
+                <a href="/client/add" class="btn btn-outline-primary btn-lg bt"><i class="fas fa-plus"></i> Agregar</a>
+            </div>
+            <div class="card-header"><i class="fas fa-file-invoice-dollar"></i> PLANES</div>
+            <div class="d-grid gap-2">
+                <a href="/plan/consult" class="btn btn-outline-primary btn-lg bt"><i class="far fa-eye"></i> Consultar</a>
+            </div>
+            <div class="d-grid gap-2">
+                <a href="/plan/add" class="btn btn-outline-primary btn-lg bt"><i class="fas fa-plus"></i> Agregar</a>
+            </div>
+        </div>
+        <div class="feet"></div>
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,16 @@
+\user> pip install Flask
+\user> pip install mysqlclient
+\user> pip install mysql-connector-python
+\user> pip install pymysql
+
+cd 'para entrar a un carpeta (ej: cd dekstop)'
+cd.. 'para salir de una carpeta (ej: cd..)
+
+PARA EJECUTAR EL PROGRAMA:
+\user\...\plan_services > python app.py 
+
+PARA CERRAR LA EJECUCIÓN DEL PROGRAMA:
+ctrl + c
+
+DIRECCIÓN DONDE ESTÁ EJECUTÁNDOSE EL PROGRAMA:
+http://localhost:3000

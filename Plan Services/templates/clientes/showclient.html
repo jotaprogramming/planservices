@@ -1,0 +1,34 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+<div class="index-form" style="padding-top: 5px;">
+    <div class="">
+        <table class="table table-striped table-bordered bg-white table-sm">
+            <div class="card-header"><i class="far fa-address-card"></i> CLIENTES</div>
+            <thead>
+                <th>ID</th>
+                <th>Teléfono fijo</th>
+                <th>Nombre(s)</th>
+                <th>Apellidos</th>
+            </thead>
+            <tbody>
+                <tbody>
+                    {% for cli in client %}
+                        <tr class="table-active">
+                            <td data-label="ID">{{ cli.0 }}</td>
+                            <td data-label="Teléfono fijo">{{ cli.6 }}</td>
+                            <td data-label="Nombre">{{ cli.1 }}</td>
+                            <td data-label="Apellidos">{{ cli.2 }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </tbody>
+        </table>
+        <div class="form-group">
+            <a href="/" class="btn btn-light btn-lg btn-back"><i class="fas fa-arrow-left"></i></a>
+        </div>
+    </div>
+    <div class="feet"></div>
+</div>
+
+{% endblock %}

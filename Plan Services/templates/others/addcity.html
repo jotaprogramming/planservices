@@ -1,0 +1,48 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+
+<div class="col-md-5 form-center">
+    {% with messages = get_flashed_messages() %}
+
+    {% if messages %}
+    {% for message in messages %}
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            {{message}}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    {% endfor %}
+    {% endif %}
+    {% endwith %}
+
+    <div class="card border-primary mb-2" style="padding: 40px;">
+        <div class="card-header">AGREGAR DATOS DEL MUNICIPIO</div>
+        <form action="/city/save" method="POST">
+            <form name="Validar" method="post">
+                <div class="form-group">
+                    <input type="textarea" name="name" placeholder="Nombre del Municipio" class="form-control" onkeypress="return SoloLetras(event);" maxlength="50" required>
+                </div>
+                <div class="form-group">
+                    <label for="selectDepart" class="form-label mt-1">Departamento</label>
+                    <select class="form-select" id="selectDepart" name=idDepart method="GET" action="/">
+                        {% for dep in depart %}
+                            <option value="{{dep.0}}">{{dep.1}}</option>
+                        {% endfor %}
+                    </select>
+                </div>              
+                <br>
+                <div class="d-grid gap-2">
+                    <button type="submit" value="Validar" class="btn btn-success btn-block btn-lg">
+                        Agregar
+                    </button>
+                </div>
+            </form>
+            <div class="form-group">
+                <a href="/" class="btn btn-back"><i class="fas fa-arrow-left"></i></a>
+            </div>
+        </form>
+    </div>
+    <div class="feet"></div>
+</div>
+
+{% endblock %}

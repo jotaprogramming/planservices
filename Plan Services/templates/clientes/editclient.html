@@ -1,0 +1,78 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+<div class="col-md-5 form-center">
+    <div class="card border-primary mb-2" style="padding: 40px;">
+        <div class="card-header">EDITAR DATOS DEL CLIENTE</div>
+        <form action="/update/{{client.0}}" method="POST">
+            <form name="Validar" method="post">
+                <div class="form-group">
+                    <input type="text" name="name" placeholder="Nombre" value="{{ client.1 }}" class="form-control" onkeypress="return SoloLetras(event);" maxlength="50" required>
+                </div>
+                <div class="form-group">
+                    <input type="text" name="lastname" placeholder="Apellidos" value="{{ client.2 }}" class="form-control" onkeypress="return SoloLetras(event);" maxlength="50" required>
+                </div>
+                <div class="form-group">
+                    <input type="text" name="dni" placeholder="Número de identificación" value="{{ client.3 }}" class="form-control" onkeypress="return SoloNumeros(event);" maxlength="10" required>
+                </div>
+                <div class="form-group">
+                    <label for="selectGender" class="form-label mt-1">Género</label>
+                    <select class="form-select" id="selectGender" name=idGender method="GET" action="/">
+                        {% for gen in gender %}
+                            <option value= "{{gen.0}}" {% if client.5 == gen.0 %} selected="selected" {% endif %}>{{gen.1}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <i>Fecha de nacimiento</i>
+                    <input id="date-picker" type="date" name="date" placeholder="Fecha" value="{{ client.4 }}" class="form-control" oninput="return Edad(event)" required>
+                </div>
+                <div class="form-group">
+                    <label for="selectCity" class="form-label mt-1">Municipio de nacimiento</label>
+                    <select class="form-select" id="selectCity" name=idMuni method="GET" action="/">
+                        {% for city in cities %}
+                            <option value="{{city.0}}" {% if client.11 == city.0 %} selected="selected" {% endif %}>{{city.1}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <input type="text" name="tel" placeholder="Teléfono fijo" value="{{ client.6 }}" class="form-control" onkeypress="return SoloNumeros(event);" maxlength="7" required>
+                </div>
+                <div class="form-group">
+                    <input type="text" name="phone" placeholder="Teléfono celular" value="{{ client.7 }}" class="form-control" onkeypress="return SoloNumeros(event);" maxlength="10" required>
+                </div>
+                <div class="form-group">
+                    <input type="text" name="email" placeholder="Correo electrónico" value="{{ client.8 }}" class="form-control" maxlength="50" required>
+                </div>
+                <div class="form-group">
+                    <input type="text" name="address" placeholder="Dirección de la residencia" value="{{ client.9 }}" class="form-control" maxlength="255" required>
+                </div> 
+                <div class="form-group">
+                    <label for="selectPlan" class="form-label mt-1"><i>Plan</i></label>
+                    <select class="form-select" id="selectPlan" name=idPlan method="GET" action="/">
+                        {% for pl in plan %}
+                        {% for company in companies %}
+                        {% if company.0 == pl.3 %}
+                            <option value="{{pl.0}}" {% if client.12 == pl.0 %} selected="selected" {% endif %}>{{company.1.upper()}} {{pl.1}}</option>
+                        {% endif %}
+                        {% endfor %}
+                        {% endfor %}
+                    </select>
+                </div>               
+                <br>
+                <div class="d-grid gap-2">
+                    <button type="submit" value="Validar" class="btn btn-success btn-block btn-lg btn-edit">
+                        Guardar datos editados
+                    </button>
+                </div>
+            </form>
+            <div class="form-group">
+                <a href="/" class="btn btn-back"><i class="fas fa-arrow-left"></i></a>
+            </div>
+        </form>
+        </div>
+        <div class="feet"></div>
+    </div>
+</div>
+
+{% endblock %}

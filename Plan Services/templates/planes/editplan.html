@@ -1,0 +1,40 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+<div class="col-md-5 form-center">
+    <div class="card border-primary mb-2" style="padding: 40px;">
+        <div class="card-header">EDITAR PLAN</div>
+        <form action="/update/{{plan.0}}" method="POST">
+            <form name="Validar" method="post">
+                <div class="form-group">
+                    <input type="textarea" name="name" placeholder="Nombre del plan (ej: Internet)" value="{{ plan.1 }}" class="form-control" onkeypress="return SoloLetras(event);" maxlength="50" required>
+                </div>
+                <div class="form-group">
+                    <textarea name="description" rows="10" cols="40" placeholder="Descripción del plan" class="form-control" maxlength="1000" required>{{ plan.2 }}</textarea>
+                </div>
+                <div class="form-group">
+                    <label for="selectCompany" class="form-label mt-1"><i>Empresa a la que pertenece el servicio</i></label>
+                    <select class="form-select" id="selectCompany" name=idComp method="GET" action="/">
+                        {% for company in companies %}
+                            <option value= "{{company.0}}" {% if plan.3 == company.0 %} selected="selected" {% endif %}>{{company.1}}</option>
+                        {% endfor %}
+                    </select>
+                </div>               
+                <br>
+                <div class="d-grid gap-2">
+                    <button type="submit" value="Validar" class="btn btn-success btn-block btn-lg btn-edit">
+                        Guardar datos editados
+                    </button>
+                </div>
+            </form>
+            <div class="form-group">
+                <a href="/" class="btn btn-back"><i class="fas fa-home"></i></a>
+                <a href="/plan/consult" class="btn btn-back"><i class="fas fa-arrow-left"></i></a>
+            </div>
+        </form>
+        </div>
+        <div class="feet"></div>
+    </div>
+</div>
+
+{% endblock %}

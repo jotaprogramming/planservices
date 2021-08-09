@@ -1,0 +1,75 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+<div class="form-center" style="padding-top: 5px;">
+    <div class="">
+        <table class="mytable">
+            <div class="card-header"><i class="far fa-address-card"></i> DATOS DEL CLIENTE</div>
+            <thead>
+                <th>Nombre</th>
+                <th>Apellidos</th>
+                <th>CC</th>
+                <th>Fecha de nacimiento</th>
+                <th>Género</th>
+                <th>Teléfono fijo</th>
+                <th>Celular</th>
+                <th>Email</th>
+                <th>Dirección</th>
+                <th>Departamento</th>
+                <th>Municipio</th>
+                <th>Plan</th>
+                <th>Empresa</th>
+            </thead>
+            <tbody>
+                {% for cli in client %}
+                    <tr class="table-active">
+                        <td data-label="Nombre">{{ cli.1 }}</td>
+                        <td data-label="Apellidos">{{ cli.2 }}</td>
+                        <td data-label="CC">{{ cli.3 }}</td>
+                        <td data-label="Fecha de nacimiento">{{ cli.4 }}</td>
+                        {% for gen in gender %}
+                        {% if gen.0 == cli.5 %}
+                        <td data-label="Género">{{ gen.1 }}</td>
+                        {% endif %}
+                        {% endfor %}
+                        <td data-label="Teléfono fijo">{{ cli.6 }}</td>
+                        <td data-label="Celular">{{ cli.7 }}</td>
+                        <td data-label="Email">{{ cli.8 }}</td>
+                        <td data-label="Dirección">{{ cli.9 }}</td>
+                        {% for depart in departs %}
+                        {% if depart.0 == cli.10 %}
+                        <td data-label="Departamento">{{ depart.1 }}</td>
+                        {% endif %}
+                        {% endfor %}
+                        {% for city in cities %}
+                        {% if city.0 == cli.11 %}
+                        <td data-label="Municipio">{{ city.1 }}</td>
+                        {% endif %}
+                        {% endfor %}
+
+                        {% for pl in plan %}
+                        {% if pl.0 == cli.12 %}
+                        <td data-label="Plan">{{ pl.1.upper() }}</td>
+                        {% for company in companies %}
+                        {% if company.0 == pl.3 %}
+                        <td data-label="Empresa">{{ company.1.upper() }}</td>
+                        {% endif %}
+                        {% endfor %}
+                        {% endif %}
+                        {% endfor %}
+                        <td>
+                            <div class="form-group">
+                                <a href="/" class="btn btn-light btn-lg btn-back"><i class="fas fa-arrow-left"></i></a>
+                                <a href="/client/edit/{{cli.0}}" class="btn btn-info btn-lg"><i class="fas fa-pencil-alt"></i></a>
+                                <a href="/client/delete/{{cli.0}}" class="btn btn-danger btn-lg btn-delete"><i class="fas fa-trash-alt"></i></a>
+                            </div>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div class="feet"></div>
+</div>
+
+{% endblock %}
