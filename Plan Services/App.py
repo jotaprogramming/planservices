@@ -1,6 +1,9 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, jsonify
 from flask.wrappers import Request
 from flask_mysqldb import MySQL
+import hashlib
+
+from werkzeug.local import F
 
 # MySql Connection
 app = Flask(__name__)
@@ -58,11 +61,36 @@ def depart(idMuni):
 def getKey(item):
     return item[1]
 
-@app.route('/client/add', methods=['GET'])
+def verify_user(met):
+    if request.method == met:
+        user_login = request.form['user_login']
+        cur_user = mysql.connection.cursor()
+        cur_user.execute('SELECT * FROM users WHERE user_login = %s', [user_login])
+        user = cur_user.fetchall()
+        if not user:
+            return False
+        else:
+            user_pass = request.form['user_pass']
+            encode_pass = hashlib.md5(user_pass.encode())
+            crypt_pass = encode_pass.hexdigest()
+            cur_pass = mysql.connection.cursor()
+            cur_pass.execute('SELECT * FROM users WHERE user_pass = %s', [crypt_pass])
+            password = cur_pass.fetchall()
+            if not password:
+                return False
+            else:
+                return True
+
+@app.route('/client/add', methods=['POST', 'GET'])
 def add_cliente():
-    gender, _, cities,plan,company = CUR()
-    _cities = sorted(cities, key=getKey)
-    return render_template('./clientes/addclient.html', gender = gender, cities = _cities, plan = plan, companies = company)
+    verify = verify_user(request.method)
+    if verify is True:
+        gender, _, cities,plan,company = CUR()
+        _cities = sorted(cities, key=getKey)
+        return render_template('./clientes/addclient.html', gender = gender, cities = _cities, plan = plan, companies = company)
+    else:
+        flash(f'Usuario y contraseña son incorrectos')
+        return redirect(url_for('Index'))
 
 @app.route('/client/save', methods=['POST'])
 def save_client():
@@ -83,7 +111,7 @@ def save_client():
         cur.execute('INSERT INTO client (name, lastname, dni, date, idGender, tel, phone, email, address, idDepart, idMuni, idPlan) VALUES (%s, %s, %s, %b, %b, %s, %s, %s, %s, %b, %b, %b)', (name, lastname, dni, date, idGender, tel, phone, email, address, idDepart, idMuni, idPlan))
         mysql.connection.commit()
         flash('Cliente añadido satisfactoriamente')
-        return redirect(url_for('add_cliente'))
+        return redirect(url_for('Index'))
 
 @app.route('/client/consult', methods=['POST'])
 def consult_cliente():
@@ -105,22 +133,32 @@ def consult_cliente():
             else:
                 return render_template('./clientes/consultclient.html', client = client, gender = gender, departs = departs, cities = cities, plan = plan, companies = company)
 
-@app.route('/client/delete/<string:id>')
-def delete_contact(id):
-    cur = mysql.connection.cursor()
-    cur.execute('DELETE FROM client WHERE id = {0}'.format(id))
-    mysql.connection.commit()
-    flash('Contacto eliminado satifactoriamente')
-    return redirect(url_for('Index'))
+@app.route('/client/delete/<string:id>', methods=['POST'])
+def delete_client(id):
+    verify = verify_user(request.method)
+    if verify is True:
+        cur = mysql.connection.cursor()
+        cur.execute('DELETE FROM client WHERE id = {0}'.format(id))
+        mysql.connection.commit()
+        flash('Cliente eliminado satifactoriamente')
+        return redirect(url_for('Index'))
+    else:
+        flash(f'No se ha podido eliminar el cliente. Usuario y contraseña incorrectos')
+        return redirect(url_for('Index'))
 
-@app.route('/client/edit/<id>')
+@app.route('/client/edit/<id>', methods=['POST'])
 def get_client(id):
-    gender, _, cities,plan,company = CUR()
-    cur = mysql.connection.cursor()
-    cur.execute('SELECT * FROM client WHERE id = %s', [id])
-    client = cur.fetchall()
-    _cities = sorted(cities, key=getKey)
-    return render_template('/clientes/editclient.html', client = client[0], gender = gender, cities = _cities, plan = plan, companies = company)
+    verify = verify_user(request.method)
+    if verify is True:
+        gender, _, cities,plan,company = CUR()
+        cur = mysql.connection.cursor()
+        cur.execute('SELECT * FROM client WHERE id = %s', [id])
+        client = cur.fetchall()
+        _cities = sorted(cities, key=getKey)
+        return render_template('/clientes/editclient.html', client = client[0], gender = gender, cities = _cities, plan = plan, companies = company)
+    else:
+        flash(f'Usuario y contraseña son incorrectos')
+        return redirect(url_for('Index'))
 
 @app.route('/update/<id>', methods = ['POST'])
 def update_client(id):
@@ -159,13 +197,18 @@ def update_client(id):
 
 # PLANES
 
-@app.route('/plan/add', methods=['GET'])
+@app.route('/plan/add', methods=['POST', 'GET'])
 def add_plan():
-    cur = mysql.connection.cursor()
-    cur.execute('SELECT * FROM company')
-    company = cur.fetchall()
-    companies = sorted(company, key=getKey)
-    return render_template('./planes/addplan.html', companies = companies)
+    verify = verify_user(request.method)
+    if verify is True:
+        cur = mysql.connection.cursor()
+        cur.execute('SELECT * FROM company')
+        company = cur.fetchall()
+        companies = sorted(company, key=getKey)
+        return render_template('./planes/addplan.html', companies = companies)
+    else:
+        flash(f'Usuario y contraseña son incorrectos')
+        return redirect(url_for('Index'))
 
 @app.route('/plan/save', methods=['POST'])
 def save_plan():
@@ -177,7 +220,7 @@ def save_plan():
         cur.execute('INSERT INTO plans (name, description, idComp) VALUES (%s, %s, %b)', (name, description, idComp))
         mysql.connection.commit()
         flash('Plan añadido satisfactoriamente')
-        return redirect(url_for('add_plan'))
+        return redirect(url_for('Index'))
 
 @app.route('/plan/consult')
 def consult_plan():
@@ -191,13 +234,13 @@ def delete_plan(id):
     mysql.connection.commit()
     flash('Plan eliminado satifactoriamente')
     return redirect(url_for('Index'))
+    
 
 @app.route('/plan/edit/<id>')
 def get_plan(id):
     cur_plan = mysql.connection.cursor()
     cur_plan.execute('SELECT * FROM plans WHERE id = %s', [id])
     plan = cur_plan.fetchall()
-    
     cur_company = mysql.connection.cursor()
     cur_company.execute('SELECT * FROM company')
     company = cur_company.fetchall()

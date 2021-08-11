@@ -33,7 +33,7 @@ body{margin: 0;padding: 20px;font-family: sans-serif;}
     justify-content: center;
 }
 
-.container-plan div:not(.header-plan, .body-plan, .bottom-plan, .form-group) {
+.container-plan div:not(.header-plan, .body-plan, .bottom-plan, .form-group, .form-group div, .alert) {
     background: #ecf0f1;
     padding: 1rem;
     border: 1px solid #1e0a77;
@@ -113,4 +113,66 @@ body{margin: 0;padding: 20px;font-family: sans-serif;}
     color: #fff;
     cursor: pointer;
     font-size: 18px;
+}
+
+/* MODAL */
+
+.modal{
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: left;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background: rgba(0,0,0,0.5);
+    transition: all 500ms ease;
+    opacity: 0;
+    visibility: hidden;
+}
+#btn-modal-one:checked ~ .modal, #btn-modal-two:checked ~ .modal{
+    opacity: 1;
+    visibility: visible;
+}
+.contenedor{
+    width: 400px;
+    height: 200px;
+    margin: auto;
+    background: #fff;
+    border-radius: 20px;
+    box-shadow: 1px 7px 25px rgba(0,0,0,0.5);
+    transition: all 500ms ease;
+    position: relative;
+    transform: translateY(-30%);
+}
+
+#btn-modal-one:checked ~ .modal .contenedor, #btn-modal-two:checked ~ .modal .contenedor{
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.contenedor header{
+    padding: 10px;
+    background: rgb(209, 28, 67);;
+    color: #fff;
+}
+
+.contenedor label{
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    color: #fff;
+    font-size: 15px;
+    cursor: pointer;
+}
+
+.contenido{
+    padding: 0 30px;
+    margin-top: 5px;
+}
+
+#btn-modal-one, #btn-modal-two{
+    display: none;
 }

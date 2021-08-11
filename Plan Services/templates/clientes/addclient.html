@@ -3,18 +3,6 @@
 {% block body %}
 
 <div class="col-md-5 form-center">
-    {% with messages = get_flashed_messages() %}
-
-    {% if messages %}
-    {% for message in messages %}
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
-            {{message}}
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-    {% endfor %}
-    {% endif %}
-    {% endwith %}
-
     <div class="card border-primary mb-2" style="padding: 40px;">
         <div class="card-header">AGREGAR DATOS DEL CLIENTE</div>
         <form action="/client/save" method="POST">
