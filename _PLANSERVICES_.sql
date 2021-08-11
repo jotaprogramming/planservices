@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 09-08-2021 a las 22:03:58
+-- Tiempo de generación: 11-08-2021 a las 20:11:43
 -- Versión del servidor: 10.4.20-MariaDB
 -- Versión de PHP: 8.0.8
 
@@ -70,7 +70,8 @@ INSERT INTO `city` (`id`, `name`, `idDepart`) VALUES
 (34, 'Cali', 30),
 (35, 'Mitú', 31),
 (36, 'Puerto Carreño', 32),
-(37, 'Piedecuesta', 27);
+(37, 'Piedecuesta', 27),
+(38, 'Girón', 27);
 
 -- --------------------------------------------------------
 
@@ -100,7 +101,7 @@ CREATE TABLE `client` (
 
 INSERT INTO `client` (`id`, `name`, `lastname`, `dni`, `date`, `idGender`, `tel`, `phone`, `email`, `address`, `idDepart`, `idMuni`, `idPlan`) VALUES
 (21, 'Karen', 'Pineda', '1001123123', '2001-07-12', 1, '6408578', '3019876537', 'karen@gmail.com', 'Cra. 5 # 1 - 3', 30, 34, 8),
-(22, 'Test', 'Test', '123', '1998-12-15', 3, '123', '123', 'test@gmail.com', 'Av. Test # 1-3', 27, 37, 10);
+(25, 'test', 'test', '123', '2001-07-13', 3, '123', '123', 'test@gmail.com', 'Av. Test # 1-3', 14, 18, 8);
 
 -- --------------------------------------------------------
 
@@ -122,7 +123,8 @@ INSERT INTO `company` (`id`, `name`) VALUES
 (2, 'TIGO'),
 (3, 'Claro'),
 (4, 'Movistar'),
-(5, 'Avantel');
+(5, 'Avantel'),
+(6, 'Avantel');
 
 -- --------------------------------------------------------
 
@@ -212,8 +214,27 @@ CREATE TABLE `plans` (
 
 INSERT INTO `plans` (`id`, `name`, `description`, `idComp`) VALUES
 (8, 'Triple Play', 'ARMA TU PLAN\r\nRECIBE MAS BENEFICIOS PARA TU HOGAR Con 3 meses de cortesía Amazon Prime Video\r\n\r\nRecibe 500 min a móviles TIGO y 50 min LDN y otros operadores en tu Telefonía fija\r\n\r\nNuestra comunidad: Llamadas de LDN ilimitadas entre líneas fijas TIGO y EDATEL a nivel nacional sin costo adicional, marcando con el 05.\r\n\r\nElige el plan de TV que más se ajuste a tus necesidades:\r\n\r\nPlanes ONEtv, para que disfrutes contenido en streaming y TV lineal, Decos con funcionalidades premium. Planes con 101 HD + 133 SD + 50 audio\r\n\r\nPlan TV CLASICA HD con 65 canales HD + 133 en SD + 50 audio', 2),
-(9, 'DUO PLAY', 'ARMA TU PLAN\r\nRECIBE MAS BENEFICIOS PARA TU HOGAR Con 3 meses de cortesía Amazon Prime Video\r\n\r\nElige el plan de TV que más se ajuste a tus necesidades:\r\n\r\nPlanes ONEtv, para que disfrutes contenido en streaming y TV lineal, Decos con funcionalidades premium. Planes con 101 HD + 133 SD + 50 audio\r\n\r\nPlan TV CLASICA HD con 65 canales HD + 133 en SD + 50 audio', 2),
-(10, 'Test', 'Lorem ipsum...', 4);
+(9, 'DUO PLAY', 'ARMA TU PLAN\r\nRECIBE MAS BENEFICIOS PARA TU HOGAR Con 3 meses de cortesía Amazon Prime Video\r\n\r\nElige el plan de TV que más se ajuste a tus necesidades:\r\n\r\nPlanes ONEtv, para que disfrutes contenido en streaming y TV lineal, Decos con funcionalidades premium. Planes con 101 HD + 133 SD + 50 audio\r\n\r\nPlan TV CLASICA HD con 65 canales HD + 133 en SD + 50 audio', 2);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `users`
+--
+
+CREATE TABLE `users` (
+  `id` int(11) NOT NULL,
+  `user_login` varchar(50) NOT NULL,
+  `user_pass` varchar(50) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Volcado de datos para la tabla `users`
+--
+
+INSERT INTO `users` (`id`, `user_login`, `user_pass`) VALUES
+(1, 'root', 'fed873cb09555c8468abe665ef5221f0'),
+(2, 'admin', 'c72c1c1b2d63498df52a9e8e4efc8fa3');
 
 --
 -- Índices para tablas volcadas
@@ -262,6 +283,12 @@ ALTER TABLE `plans`
   ADD KEY `fkidcomp` (`idComp`);
 
 --
+-- Indices de la tabla `users`
+--
+ALTER TABLE `users`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- AUTO_INCREMENT de las tablas volcadas
 --
 
@@ -269,19 +296,19 @@ ALTER TABLE `plans`
 -- AUTO_INCREMENT de la tabla `city`
 --
 ALTER TABLE `city`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=38;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=39;
 
 --
 -- AUTO_INCREMENT de la tabla `client`
 --
 ALTER TABLE `client`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
 
 --
 -- AUTO_INCREMENT de la tabla `company`
 --
 ALTER TABLE `company`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT de la tabla `department`
@@ -300,6 +327,12 @@ ALTER TABLE `genre`
 --
 ALTER TABLE `plans`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+
+--
+-- AUTO_INCREMENT de la tabla `users`
+--
+ALTER TABLE `users`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- Restricciones para tablas volcadas
