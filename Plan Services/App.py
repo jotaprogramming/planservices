@@ -160,7 +160,7 @@ def get_client(id):
         flash(f'Usuario y contraseña son incorrectos')
         return redirect(url_for('Index'))
 
-@app.route('/update/<id>', methods = ['POST'])
+@app.route('/client/update/<id>', methods = ['POST'])
 def update_client(id):
     if request.method == 'POST':
         name = request.form['name']
@@ -234,7 +234,6 @@ def delete_plan(id):
     mysql.connection.commit()
     flash('Plan eliminado satifactoriamente')
     return redirect(url_for('Index'))
-    
 
 @app.route('/plan/edit/<id>')
 def get_plan(id):
@@ -247,37 +246,21 @@ def get_plan(id):
     companies = sorted(company, key=getKey)
     return render_template('/planes/editplan.html', plan = plan[0], companies = companies)
 
-@app.route('/update/<id>', methods = ['POST'])
+@app.route('/plan/update/<id>', methods = ['POST'])
 def update_plan(id):
     if request.method == 'POST':
         name = request.form['name']
-        lastname = request.form['lastname']
-        dni = request.form['dni']
-        date = request.form['date']
-        idGender = request.form['idGender']
-        tel = request.form['tel']
-        phone = request.form['phone']
-        email = request.form['email']
-        address = request.form['address']
-        idMuni = request.form['idMuni']
-        idDepart = depart(idMuni)
+        description = request.form['description']
+        idComp = request.form['idComp']
         cur = mysql.connection.cursor()
-        cur.execute("""UPDATE client 
+        cur.execute("""UPDATE plans 
             SET name = %s, 
-            lastname = %s, 
-            dni = %s, 
-            date = %b, 
-            idGender = %b, 
-            tel = %s, 
-            phone = %s, 
-            email = %s, 
-            address = %s, 
-            idDepart = %b, 
-            idMuni = %b
+            description = %s, 
+            idComp = %b 
             WHERE id = %s
-            """, (name, lastname, dni, date, idGender, tel, phone, email, address, idDepart, idMuni, id))
+            """, (name, description, idComp, id))
         mysql.connection.commit()
-        flash('Contacto editado satisfactoriamente')
+        flash('Plan editado satisfactoriamente')
         return redirect(url_for('Index'))
 
 # EMPRESA

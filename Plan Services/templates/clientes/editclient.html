@@ -4,7 +4,7 @@
 <div class="col-md-5 form-center">
     <div class="card border-primary mb-2" style="padding: 40px;">
         <div class="card-header">EDITAR DATOS DEL CLIENTE</div>
-        <form action="/update/{{client.0}}" method="POST">
+        <form action="/client/update/{{client.0}}" method="POST">
             <form name="Validar" method="post">
                 <div class="form-group">
                     <input type="text" name="name" placeholder="Nombre" value="{{ client.1 }}" class="form-control" onkeypress="return SoloLetras(event);" maxlength="50" required>

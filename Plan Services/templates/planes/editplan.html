@@ -4,7 +4,7 @@
 <div class="col-md-5 form-center">
     <div class="card border-primary mb-2" style="padding: 40px;">
         <div class="card-header">EDITAR PLAN</div>
-        <form action="/update/{{plan.0}}" method="POST">
+        <form action="/plan/update/{{plan.0}}" method="POST">
             <form name="Validar" method="post">
                 <div class="form-group">
                     <input type="textarea" name="name" placeholder="Nombre del plan (ej: Internet)" value="{{ plan.1 }}" class="form-control" onkeypress="return SoloLetras(event);" maxlength="50" required>
