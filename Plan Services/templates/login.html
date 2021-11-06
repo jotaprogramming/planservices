@@ -1,0 +1,31 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+
+<div class="login-box">
+    <img class="avatar" src="https://cdn-icons-png.flaticon.com/512/295/295128.png" alt="User">
+    <h1>Inicio de sesión</h1>
+    <form action="/login/verify" method="POST">
+        <form name="Validar" method="post">
+            <i class="bi bi-person-circle" for="username"></i>
+            <input id="user" type="text" name="user_login" placeholder="Usuario" class="form-control" maxlength="20" required>
+            <i class="bi bi-key" for="password"></i>
+            <input type="password" name="user_pass" placeholder="Contraseña" class="form-control" maxlength="20" required>
+            <div class="d-grid gap-2">
+                <button type="submit" value="Validar" class="btn-lg bt bt-login">Ingresar</button>
+            </div>
+        </form>
+    </form>
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    {% for message in messages %}
+        <div class="alert alert-dismissible alert-warning">
+            {{message}}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    {% endfor %}
+    {% endif %}
+    {% endwith %}
+</div>
+
+{% endblock %}

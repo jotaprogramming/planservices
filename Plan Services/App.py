@@ -16,6 +16,8 @@ mysql = MySQL(app)
 # Settings
 app.secret_key = 'mysecretkey'
 
+session = None
+
 def CUR():
     cur_gender = mysql.connection.cursor()
     cur_gender.execute('SELECT * FROM genre')
@@ -40,7 +42,10 @@ def CUR():
 
 @app.route('/')
 def Index():
-    return render_template('index.html')
+    if session:
+        return render_template('index.html')
+    else:
+        return redirect(url_for('login'))
 
 # CLIENTES
 
@@ -68,7 +73,7 @@ def verify_user(met):
         cur_user.execute('SELECT * FROM users WHERE user_login = %s', [user_login])
         user = cur_user.fetchall()
         if not user:
-            return False
+            return False, None
         else:
             user_pass = request.form['user_pass']
             encode_pass = hashlib.md5(user_pass.encode())
@@ -77,13 +82,13 @@ def verify_user(met):
             cur_pass.execute('SELECT * FROM users WHERE user_pass = %s', [crypt_pass])
             password = cur_pass.fetchall()
             if not password:
-                return False
+                return False, None
             else:
-                return True
+                return True, user_login
 
 @app.route('/client/add', methods=['POST', 'GET'])
 def add_cliente():
-    verify = verify_user(request.method)
+    verify, _ = verify_user(request.method)
     if verify is True:
         gender, _, cities,plan,company = CUR()
         _cities = sorted(cities, key=getKey)
@@ -199,7 +204,7 @@ def update_client(id):
 
 @app.route('/plan/add', methods=['POST', 'GET'])
 def add_plan():
-    verify = verify_user(request.method)
+    verify, _ = verify_user(request.method)
     if verify is True:
         cur = mysql.connection.cursor()
         cur.execute('SELECT * FROM company')
@@ -296,6 +301,27 @@ def save_city():
         mysql.connection.commit()
         flash('Municipio añadido satisfactoriamente')
         return redirect(url_for('add_city'))
+
+@app.route('/logout')
+def logout():
+    global session
+    session = None
+    return redirect(url_for('Index'))
+
+@app.route('/login')
+def login():
+    return render_template('login.html')
+
+@app.route('/login/verify', methods=['POST'])
+def verify_login():
+    verify, user_login = verify_user(request.method)
+    global session
+    if verify is True:
+        session = user_login
+        return redirect(url_for('Index'))
+    else:
+        flash(f'El usuario y la contraseña son incorrectos')
+        return redirect(url_for('login'))
 
 if __name__ == '__main__':
     app.run(port = 3000, debug = True)
