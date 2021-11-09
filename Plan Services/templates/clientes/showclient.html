@@ -5,20 +5,58 @@
     <div class="">
         <table class="table table-striped table-bordered bg-white table-sm">
             <div class="card-header"><i class="far fa-address-card"></i> CLIENTES</div>
+            <div class="card-header form-group">
+                <h6 class="form-label mt-1">Filtrar busqueda de clientes por: </h6>
+                <form action="/client/search" method="POST">
+                    <label for="city_search" class="form-label mt-1">Ciudad: </label>
+                    <select id="city_shearch" name=idMuni method="GET" action="/">
+                        <option value="null" selected="selected">Todo</option>
+                        {% for city in cities %}
+                        <option value="{{city.0}}">{{city.1}}</option>
+                        {% endfor %}
+                    </select>
+                    <label for="month_search" class="form-label mt-1">Mes: </label>
+                    <select id="month_search" name=month method="GET" action="/">
+                        <option value="null" selected="selected">Todo</option>
+                        {% for m_item in months %}
+                            {% for m_key, m_value in m_item.items() %}
+                                <option value="{{m_key}}">{{m_value}}</option>
+                            {% endfor %}
+                        {% endfor %}
+                    </select>
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary">Buscar</button>
+                    </div>
+                </form>
+            </div>
             <thead>
-                <th>ID</th>
+                <th></th>
                 <th>Teléfono fijo</th>
                 <th>Nombre(s)</th>
                 <th>Apellidos</th>
+                <th>Ciudad</th>
+                <th>Nacimiento</th>
             </thead>
             <tbody>
                 <tbody>
                     {% for cli in client %}
                         <tr class="table-active">
-                            <td data-label="ID">{{ cli.0 }}</td>
-                            <td data-label="Teléfono fijo">{{ cli.6 }}</td>
+                            <td data-label="Enlace">
+                                <a class="enlace" href="/client/consult/{{ cli.0 }}">
+                                    <i class="bi bi-three-dots"></i>
+                                </a>
+                            </td>
+                            <td data-label="Teléfono fijo">
+                                <a class="enlace" href="/client/consult/{{ cli.0 }}">{{ cli.6 }}</a>
+                            </td>
                             <td data-label="Nombre">{{ cli.1 }}</td>
                             <td data-label="Apellidos">{{ cli.2 }}</td>
+                            {% for city in cities %}
+                            {% if city.0 == cli.11 %}
+                            <td data-label="Ciudad">{{ city.1 }}</td>
+                            {% endif %}
+                            {% endfor %}
+                            <td data-label="Fecha de nacimiento">{{ cli.4 }}</td>
                         </tr>
                     {% endfor %}
                 </tbody>

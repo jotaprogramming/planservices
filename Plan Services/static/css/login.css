@@ -72,3 +72,8 @@
 .log-out:hover{
     color: rgb(204, 10, 10);
 }
+
+.enlace{
+    text-decoration: none;
+    color: rgb(58, 58, 58);
+}

@@ -18,6 +18,20 @@ app.secret_key = 'mysecretkey'
 
 session = None
 
+months = [{
+    1: 'Enero', 
+    2: 'Febrero', 
+    3: 'Marzo',
+    4: 'Abril',
+    5: 'Mayo',
+    6: 'Junio',
+    7: 'Julio',
+    8: 'Agosto',
+    9: 'Septiembre',
+    10: 'Octubre',
+    11: 'Noviembre',
+    12: 'Diciembre'}]
+
 def CUR():
     cur_gender = mysql.connection.cursor()
     cur_gender.execute('SELECT * FROM genre')
@@ -40,12 +54,17 @@ def CUR():
     company = cur_company.fetchall()
     return gender, departs, cities, plan, company
 
+def allclient_cur():
+    cur_allclient = mysql.connection.cursor()
+    cur_allclient.execute('SELECT * FROM client')
+    return cur_allclient.fetchall()
+
 @app.route('/')
 def Index():
-    if session:
-        return render_template('index.html')
+    if not session:
+        return render_template('login.html')
     else:
-        return redirect(url_for('login'))
+        return render_template('index.html')
 
 # CLIENTES
 
@@ -85,6 +104,15 @@ def verify_user(met):
                 return False, None
             else:
                 return True, user_login
+
+def Date(date, num_month):
+    id = []
+    for i in range(len(date)):
+        print(f'{date[i][4].month} == {num_month}')
+        if int(date[i][4].month) == int(num_month):
+            id.insert(i, str(date[i][0]))
+            print(id)
+    return id
 
 @app.route('/client/add', methods=['POST', 'GET'])
 def add_cliente():
@@ -127,10 +155,9 @@ def consult_cliente():
         cur_client.execute('SELECT * FROM client WHERE tel = %s', [tel])
         client = cur_client.fetchall()
         if not tel:
-            cur_allclient = mysql.connection.cursor()
-            cur_allclient.execute('SELECT * FROM client')
-            allclient = cur_allclient.fetchall()
-            return render_template('./clientes/showclient.html', client = allclient)
+            allclient = allclient_cur()
+            _cities = sorted(cities, key=getKey)
+            return render_template('./clientes/showclient.html', client = allclient, cities = _cities, months = months)
         else:
             if not client:
                 flash(f'El cliente con el número "{tel}" no existe')
@@ -138,9 +165,49 @@ def consult_cliente():
             else:
                 return render_template('./clientes/consultclient.html', client = client, gender = gender, departs = departs, cities = cities, plan = plan, companies = company)
 
+@app.route('/client/consult/<id>')
+def id_client(id):
+    gender, departs, cities, plan, company = CUR()
+    cur_client = mysql.connection.cursor()
+    cur_client.execute('SELECT * FROM client WHERE id = %s', [id])
+    client = cur_client.fetchall()
+    _cities = sorted(cities, key=getKey)
+    return render_template('./clientes/consultclient.html', client = client, gender = gender, departs = departs, cities = _cities, plan = plan, companies = company)
+
+@app.route('/client/search', methods=['POST'])
+def search_client():
+    global session
+    if request.method == 'POST':
+        _, _, cities, _, _ = CUR()
+        _cities = sorted(cities, key=getKey)
+        idMuni = request.form['idMuni']
+        month = request.form['month']
+        if idMuni == 'null' and month == 'null':
+            allclient = allclient_cur()
+            return render_template('./clientes/showclient.html', client = allclient, cities = _cities, months = months)
+        else:
+            cur_client = mysql.connection.cursor()
+            if idMuni != 'null' and month == 'null':
+                cur_client.execute('SELECT * FROM client WHERE idMuni = %s', [idMuni])
+            elif idMuni == 'null' and month != 'null':
+                allclient = allclient_cur()
+                id = Date(allclient, month)
+                if id:
+                    cur_client.execute('SELECT * FROM client WHERE id = %s', [id])
+                else:
+                    cur_client.execute('SELECT * FROM client WHERE id = %s', [month])
+            else:
+                allclient = allclient_cur()
+                id = Date(allclient, month)
+                if not id:
+                    id = month
+                cur_client.execute('SELECT * FROM client WHERE idMuni = %s AND id = %s', [idMuni, id])
+            client = cur_client.fetchall()
+            return render_template('./clientes/showclient.html', client = client, cities = _cities, months = months)
+
 @app.route('/client/delete/<string:id>', methods=['POST'])
 def delete_client(id):
-    verify = verify_user(request.method)
+    verify, _ = verify_user(request.method)
     if verify is True:
         cur = mysql.connection.cursor()
         cur.execute('DELETE FROM client WHERE id = {0}'.format(id))
@@ -153,7 +220,7 @@ def delete_client(id):
 
 @app.route('/client/edit/<id>', methods=['POST'])
 def get_client(id):
-    verify = verify_user(request.method)
+    verify, _ = verify_user(request.method)
     if verify is True:
         gender, _, cities,plan,company = CUR()
         cur = mysql.connection.cursor()
@@ -308,12 +375,8 @@ def logout():
     session = None
     return redirect(url_for('Index'))
 
-@app.route('/login')
+@app.route('/login', methods=['POST'])
 def login():
-    return render_template('login.html')
-
-@app.route('/login/verify', methods=['POST'])
-def verify_login():
     verify, user_login = verify_user(request.method)
     global session
     if verify is True:
